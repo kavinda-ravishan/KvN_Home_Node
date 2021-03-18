@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const Joi = require("@hapi/joi");
-
 const userDatabase = require("../Database/userDatabase");
+const bcrypt = require("bcryptjs");
 
 //Signin validation
 const signinValidation = (data) => {
@@ -14,7 +14,7 @@ const signinValidation = (data) => {
   return schema.validate(data);
 };
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   //Get Data from req Boy
   const reqBody = req.body;
   const userData = {
@@ -29,16 +29,25 @@ router.post("/", (req, res) => {
     return res.status(400).header("error", error.details[0].message).end();
   }
 
-  userDatabase.find({ email: userData.email }, function (err, users) {
+  userDatabase.find({ email: userData.email }, async function (err, users) {
     if (users.length) {
-      res.status(400).header("error", "Email already Exists!").end();
-    } else {
-      userDatabase.insert(userData);
-      res
-        .status(200)
-        .json({ msg: `User ${userData.userName} successfully registered.` })
-        .end();
+      return res.status(400).header("error", "Email already Exists!").end();
     }
+    //HASH the password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(userData.password, salt);
+
+    const userDataForDB = {
+      email: reqBody.email,
+      userName: reqBody.userName,
+      password: hashedPassword,
+    };
+
+    userDatabase.insert(userDataForDB);
+    res
+      .status(200)
+      .json({ msg: `User ${userData.userName} successfully registered.` })
+      .end();
   });
 });
 
