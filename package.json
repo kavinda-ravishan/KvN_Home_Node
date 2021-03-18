@@ -1,0 +1,24 @@
+{
+  "name": "kvn_home_node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon main",
+    "start": "node ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kavinda-ravishan/KvN_Home_Node.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kavinda-ravishan/KvN_Home_Node/issues"
+  },
+  "homepage": "https://github.com/kavinda-ravishan/KvN_Home_Node#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
