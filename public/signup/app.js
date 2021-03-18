@@ -26,11 +26,7 @@ signupDom.addEventListener("click", async () => {
   if (res.status !== 200) {
     resDom.textContent = res.headers.get("error");
   } else {
-    const id = res.headers.get("id");
-    const jsonRes = await res.json();
-
-    console.log(status);
-    console.log(id);
-    console.log(jsonRes);
+    const resJson = await res.json();
+    resDom.textContent = resJson.msg;
   }
 });
