@@ -1,0 +1,36 @@
+const signupDom = document.getElementById("signup");
+const emailDom = document.getElementById("email");
+const userNameDom = document.getElementById("userName");
+const passwordDom = document.getElementById("password");
+const resDom = document.getElementById("res");
+
+signupDom.addEventListener("click", async () => {
+  resDom.textContent = "";
+
+  const userData = {
+    email: emailDom.value,
+    userName: userNameDom.value,
+    password: passwordDom.value,
+  };
+
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userData),
+  };
+
+  const res = await fetch("/signup", options);
+
+  if (res.status !== 200) {
+    resDom.textContent = res.headers.get("error");
+  } else {
+    const id = res.headers.get("id");
+    const jsonRes = await res.json();
+
+    console.log(status);
+    console.log(id);
+    console.log(jsonRes);
+  }
+});
