@@ -26,5 +26,8 @@ loginDom.addEventListener("click", async () => {
   } else {
     const resJson = await res.json();
     resDom.textContent = resJson.msg;
+
+    const resNext = await fetch("/dashboard");
+    window.location.replace(resNext.url);
   }
 });
