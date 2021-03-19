@@ -23,8 +23,14 @@ router.post("/", async (req, res) => {
 
       res
         .status(200)
-        .cookie("session-token", token)
-        .cookie("user-name", user.userName)
+        .cookie("session-token", token, {
+          expires: new Date(Date.now() + 3600000),
+          httpOnly: true,
+        })
+        .cookie("user-name", user.userName, {
+          expires: new Date(Date.now() + 3600000),
+          httpOnly: true,
+        })
         .json({ msg: `User ${user.userName} successfully logged in.` })
         .end();
     } else {
