@@ -4,18 +4,25 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Login</title>
   </head>
   <body>
-    <h1>Login</h1>
-    <div class="form">
-      <label for="email">Email</label>
-      <input id="email" type="text" value="abc123@gmail.com" />
-      <label for="password">Password</label>
-      <input id="password" type="password" value="abc123" />
-      <button id="login">Login</button>
+    <div class="container">
+      <div class="form">
+        <h1>Login</h1>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input class="form-control" id="email" type="text" />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input class="form-control" id="password" type="password" />
+        </div>
+        <button class="btn" id="login">Login</button>
+        <div class="res"><span id="res"></span></div>
+      </div>
     </div>
-    <div class="res"><span id="res"></span></div>
     <script src="app.js"></script>
   </body>
 </html>
