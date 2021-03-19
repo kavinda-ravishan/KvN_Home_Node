@@ -35,6 +35,9 @@
     }
 
     const userNameDom = document.getElementById("userName");
-    userNameDom.textContent = getCookieByName("user-name").replace("%20", " ");
+    userNameDom.textContent = getCookieByName("user-name").replaceAll(
+      "%20",
+      " "
+    );
   </script>
 </html>
