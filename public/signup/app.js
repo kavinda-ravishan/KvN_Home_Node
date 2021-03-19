@@ -2,6 +2,7 @@ const signupDom = document.getElementById("signup");
 const emailDom = document.getElementById("email");
 const userNameDom = document.getElementById("userName");
 const passwordDom = document.getElementById("password");
+const confirmPasswordDom = document.getElementById("confirmPassword");
 const resDom = document.getElementById("res");
 
 signupDom.addEventListener("click", async () => {
@@ -11,6 +12,7 @@ signupDom.addEventListener("click", async () => {
     email: emailDom.value,
     userName: userNameDom.value,
     password: passwordDom.value,
+    confirmPassword: confirmPasswordDom.value,
   };
 
   const options = {

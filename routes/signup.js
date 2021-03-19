@@ -15,6 +15,14 @@ const signinValidation = (data) => {
 };
 
 router.post("/", async (req, res) => {
+  //Match Password with confirm passwor
+  if (req.body.password !== req.body.confirmPassword) {
+    return res
+      .status(400)
+      .header("error", "Please make sure your passwords match")
+      .end();
+  }
+
   //Get Data from req Boy
   const reqBody = req.body;
   const userData = {
