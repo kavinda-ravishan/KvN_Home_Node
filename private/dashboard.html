@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <h1>Dashboard</h1>
+    <a onclick="signOut()" href="">Sign out</a>
+    <h2>Welcome <span id="userName"></span></h2>
+  </body>
+  <script>
+    function getCookieByName(cookieName) {
+      const cookies = document.cookie.split(";");
+      for (cookie of cookies) {
+        const cookieNameKey = cookie.split("=");
+        if (cookieNameKey[0].trim() === cookieName) {
+          return cookieNameKey[1].trim();
+        }
+      }
+    }
+
+    function signOut() {
+      //Delete all Cookies
+      var cookies = document.cookie.split(";");
+
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      }
+    }
+
+    const userNameDom = document.getElementById("userName");
+    userNameDom.textContent = getCookieByName("user-name").replace("%20", " ");
+  </script>
+</html>

@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
+const path = require("path");
 
 function checkAuthenticated(req, res, next) {
   try {
@@ -23,7 +24,7 @@ function checkAuthenticated(req, res, next) {
 }
 
 router.get("/", checkAuthenticated, (req, res) => {
-  res.end("<h1>user</h1>");
+  res.sendFile(path.resolve("private/dashboard.html"));
 });
 
 module.exports = router;

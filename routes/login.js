@@ -25,11 +25,9 @@ router.post("/", async (req, res) => {
         .status(200)
         .cookie("session-token", token, {
           expires: new Date(Date.now() + 3600000),
-          httpOnly: true,
         })
         .cookie("user-name", user.userName, {
           expires: new Date(Date.now() + 3600000),
-          httpOnly: true,
         })
         .json({ msg: `User ${user.userName} successfully logged in.` })
         .end();
