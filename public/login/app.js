@@ -26,12 +26,5 @@ loginDom.addEventListener("click", async () => {
   } else {
     const resJson = await res.json();
     resDom.textContent = resJson.msg;
-
-    //TEST
-    const cookies = document.cookie.split(";");
-    for (cookie of cookies) {
-      console.log(cookie.split("=")[0], cookie.split("=")[1]);
-    }
-    //
   }
 });

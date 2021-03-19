@@ -29,8 +29,8 @@ router.post("/", async (req, res) => {
     return res.status(400).header("error", error.details[0].message).end();
   }
 
-  userDatabase.find({ email: userData.email }, async function (err, users) {
-    if (users.length) {
+  userDatabase.findOne({ email: userData.email }, async function (err, user) {
+    if (user) {
       return res.status(400).header("error", "Email already Exists!").end();
     }
     //HASH the password

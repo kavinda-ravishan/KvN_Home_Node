@@ -2,7 +2,6 @@ const router = require("express").Router();
 const userDatabase = require("../Database/userDatabase");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 
 router.post("/", async (req, res) => {
   //Get Data from req Boy
@@ -12,10 +11,8 @@ router.post("/", async (req, res) => {
     password: reqBody.password,
   };
 
-  userDatabase.find({ email: userData.email }, async function (err, users) {
-    if (users.length) {
-      const user = users[0];
-
+  userDatabase.findOne({ email: userData.email }, async function (err, user) {
+    if (user) {
       //Match the password
       const validPass = await bcrypt.compare(userData.password, user.password);
       if (!validPass) {
@@ -23,13 +20,6 @@ router.post("/", async (req, res) => {
       }
 
       const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-      console.log(token);
-      const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
-
-      //TEST for session time
-      const sessionTime = Math.round(Date.now() / 1000) - ticket.iat;
-      console.log(sessionTime);
-      //
 
       res
         .status(200)
