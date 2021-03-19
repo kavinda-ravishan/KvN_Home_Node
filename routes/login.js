@@ -25,7 +25,6 @@ router.post("/", async (req, res) => {
         .status(200)
         .cookie("session-token", token)
         .cookie("user-name", user.userName)
-        .cookie("email", user.email)
         .json({ msg: `User ${user.userName} successfully logged in.` })
         .end();
     } else {
