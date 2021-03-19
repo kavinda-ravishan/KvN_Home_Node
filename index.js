@@ -20,22 +20,37 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
-app.get("/dashboard", (req, res) => {
-  res.end("<h1>user</h1>");
-
+function checkAuthenticated(req, res, next) {
   const token = req.cookies["session-token"];
   if (token) {
-    console.log(token);
+    try {
+      const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
+      //console.log(token);
+      //console.log(ticket);
+      //TEST for session time
+      //const sessionTime = Math.round(Date.now() / 1000) - ticket.iat;
+      //console.log(sessionTime);
+      //
 
-    const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
-
-    //TEST for session time
-    const sessionTime = Math.round(Date.now() / 1000) - ticket.iat;
-    console.log(sessionTime);
-    //
+      next();
+    } catch (err) {
+      res
+        .clearCookie("email")
+        .clearCookie("user-name")
+        .clearCookie("session-token")
+        .redirect("/login");
+    }
   } else {
-    console.log("Token not found");
+    res
+      .clearCookie("email")
+      .clearCookie("user-name")
+      .clearCookie("session-token")
+      .redirect("/login");
   }
+}
+
+app.get("/dashboard", checkAuthenticated, (req, res) => {
+  res.end("<h1>user</h1>");
 });
 //
 
