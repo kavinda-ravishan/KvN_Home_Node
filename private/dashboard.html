@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
     <title>Dashboard</title>
   </head>
   <body>
@@ -36,9 +35,14 @@
     }
 
     const userNameDom = document.getElementById("userName");
-    userNameDom.textContent = getCookieByName("user-name").replaceAll(
-      "%20",
-      " "
-    );
+    const userName = getCookieByName("user-name");
+    let firstName = "";
+
+    for (char of userName) {
+      if (char === "%") break;
+      firstName += char;
+    }
+
+    userNameDom.textContent = firstName;
   </script>
 </html>
