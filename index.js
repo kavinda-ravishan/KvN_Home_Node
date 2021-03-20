@@ -26,17 +26,6 @@ app.use("/dashboard", dashboardRoute);
 const jwt = require("jsonwebtoken");
 const userDatabase = require("./Database/userDatabase");
 io.on("connection", (socket) => {
-  console.log(`A user connected with ID : ${socket.id}`);
-
-  socket.on("init", (token) => {
-    const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
-    console.log(ticket);
-  });
-
-  socket.on("disconnect", () => {
-    console.log(`User disconnected with ID : ${socket.id}`);
-  });
-
   socket.on("chatMessage", (data) => {
     try {
       const ticket = jwt.verify(data.token, process.env.TOKEN_SECRET);

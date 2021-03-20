@@ -4,21 +4,127 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+      crossorigin="anonymous"
+    />
     <title>Dashboard</title>
   </head>
+  <style>
+    body {
+      margin: 0;
+      padding-bottom: 3rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
+    }
+
+    #form {
+      background: rgba(0, 0, 0, 0.15);
+      padding: 0.25rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      height: 3rem;
+      box-sizing: border-box;
+      backdrop-filter: blur(10px);
+    }
+    #input {
+      border: none;
+      padding: 0 1rem;
+      flex-grow: 1;
+      border-radius: 2rem;
+      margin: 0.25rem;
+    }
+    #input:focus {
+      outline: none;
+    }
+    #form > button {
+      background: #333;
+      border: none;
+      padding: 0 1rem;
+      margin: 0.25rem;
+      border-radius: 3px;
+      outline: none;
+      color: #fff;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+    #messages > li {
+      padding: 0.5rem 1rem;
+    }
+    #messages > li:nth-child(odd) {
+      background: #efefef;
+    }
+    .navbar {
+      overflow: hidden;
+      background-color: #333;
+      position: fixed; /* Set the navbar to fixed position */
+      top: 0; /* Position the navbar at the top of the page */
+      width: 100%; /* Full width */
+    }
+    /* Main content */
+    .main {
+      margin-top: 60px; /* Add a top margin to avoid content overlay */
+    }
+  </style>
   <body>
-    <h1>Dashboard</h1>
-    <a onclick="signOut()" href="">Sign out</a>
-    <h2>Welcome <span id="userName"></span></h2>
-    <input id="input" type="text" /><button id="send">Send</button>
-    <p>Msg : <span id="reply"></span></p>
+    <div class="navbar">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/dashboard"
+            >Welcome <span id="userName"></span
+          ></a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+            </ul>
+            <form class="d-flex">
+              <button class="btn btn-outline-success" onclick="signOut()">
+                Sign out
+              </button>
+            </form>
+          </div>
+        </div>
+      </nav>
+    </div>
+    <div class="main">
+      <ul id="messages"></ul>
+      <form id="form" action="">
+        <input id="input" autocomplete="off" /><button>Send</button>
+      </form>
+    </div>
   </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0"
+    crossorigin="anonymous"
+  ></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const userNameDom = document.getElementById("userName");
-    const sendDom = document.getElementById("send");
     const inputDom = document.getElementById("input");
-    const replyDom = document.getElementById("reply");
+    const messages = document.getElementById("messages");
 
     const socket = io();
 
@@ -57,7 +163,8 @@
 
     showUserName();
 
-    sendDom.addEventListener("click", () => {
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
       if (input.value) {
         socket.emit("chatMessage", {
           token: getCookieByName("session-token"),
@@ -68,7 +175,10 @@
     });
 
     socket.on("chatMessage", function (data) {
-      replyDom.textContent = `${data.name} : ${data.msg}`;
+      const item = document.createElement("li");
+      item.textContent = `${data.name} : ${data.msg}`;
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
     });
   </script>
 </html>
