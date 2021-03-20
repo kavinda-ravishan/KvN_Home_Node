@@ -10,8 +10,18 @@
     <h1>Dashboard</h1>
     <a onclick="signOut()" href="">Sign out</a>
     <h2>Welcome <span id="userName"></span></h2>
+    <input id="input" type="text" /><button id="send">Send</button>
+    <p>Msg : <span id="reply"></span></p>
   </body>
+  <script src="/socket.io/socket.io.js"></script>
   <script>
+    const userNameDom = document.getElementById("userName");
+    const sendDom = document.getElementById("send");
+    const inputDom = document.getElementById("input");
+    const replyDom = document.getElementById("reply");
+
+    const socket = io();
+
     function getCookieByName(cookieName) {
       const cookies = document.cookie.split(";");
       for (cookie of cookies) {
@@ -34,15 +44,31 @@
       }
     }
 
-    const userNameDom = document.getElementById("userName");
-    const userName = getCookieByName("user-name");
-    let firstName = "";
+    function showUserName() {
+      let firstName = "";
 
-    for (char of userName) {
-      if (char === "%") break;
-      firstName += char;
+      for (char of getCookieByName("user-name")) {
+        if (char === "%") break;
+        firstName += char;
+      }
+
+      userNameDom.textContent = firstName;
     }
 
-    userNameDom.textContent = firstName;
+    showUserName();
+
+    sendDom.addEventListener("click", () => {
+      if (input.value) {
+        socket.emit("chatMessage", {
+          token: getCookieByName("session-token"),
+          msg: input.value,
+        });
+        input.value = "";
+      }
+    });
+
+    socket.on("chatMessage", function (data) {
+      replyDom.textContent = `${data.name} : ${data.msg}`;
+    });
   </script>
 </html>

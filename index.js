@@ -1,5 +1,7 @@
 const express = require("express");
 const app = express();
+const http = require("http").Server(app);
+const io = require("socket.io")(http);
 
 const dotenv = require("dotenv");
 dotenv.config();
@@ -21,7 +23,34 @@ app.use("/login", loginRoute);
 app.use("/dashboard", cookieParser());
 app.use("/dashboard", dashboardRoute);
 
+const jwt = require("jsonwebtoken");
+const userDatabase = require("./Database/userDatabase");
+io.on("connection", (socket) => {
+  console.log(`A user connected with ID : ${socket.id}`);
+
+  socket.on("init", (token) => {
+    const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
+    console.log(ticket);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`User disconnected with ID : ${socket.id}`);
+  });
+
+  socket.on("chatMessage", (data) => {
+    try {
+      const ticket = jwt.verify(data.token, process.env.TOKEN_SECRET);
+      userDatabase.findOne({ _id: ticket._id }, (err, user) => {
+        if (err) throw new Error(err);
+        io.emit("chatMessage", { name: user.userName, msg: data.msg });
+      });
+    } catch (err) {
+      return;
+    }
+  });
+});
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log(`Server listening at port ${PORT}`);
 });
