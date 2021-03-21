@@ -25,17 +25,15 @@ app.use("/dashboard", dashboardRoute);
 //TESTING
 const jwt = require("jsonwebtoken");
 const userDatabase = require("./Database/userDatabase");
-const connectedUsersDatabase = require("./Database/connectedUsersDatabase");
+const connectedUsers = {};
+
 io.on("connection", (socket) => {
   socket.on("init", (token) => {
     try {
       const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
       userDatabase.findOne({ _id: ticket._id }, (err, user) => {
         if (err) throw new Error(err);
-        connectedUsersDatabase.insert({
-          userName: user.userName,
-          socketID: socket.id,
-        });
+        connectedUsers[socket.id] = user.userName;
       });
     } catch (err) {
       return;
@@ -43,30 +41,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    try {
-      connectedUsersDatabase.remove({ socketID: socket.id }, (err, user) => {
-        if (err) throw new Error(err);
-      });
-    } catch (err) {
-      return;
-    }
+    delete connectedUsers[socket.id];
   });
 
-  socket.on("chatMessage", (data) => {
-    try {
-      connectedUsersDatabase.findOne({ socketID: socket.id }, (err, user) => {
-        if (err) throw new Error(err);
-        if (!user) {
-          io.to(socket.id).emit("chatMessage", {
-            name: "Server",
-            msg: "Please refresh the page",
-          });
-          return;
-        }
-        io.emit("chatMessage", { name: user.userName, msg: data.msg });
+  socket.on("chatMessage", (msg) => {
+    console.log(connectedUsers);
+
+    const name = connectedUsers[socket.id];
+    if (name) io.emit("chatMessage", { name: name, msg: msg });
+    else {
+      io.to(socket.id).emit("chatMessage", {
+        name: "Server",
+        msg: "Please refresh the page",
       });
-    } catch (err) {
-      return;
     }
   });
 });

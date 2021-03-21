@@ -2,4 +2,3 @@ node_modules/
 .env
 examples.js
 userDB.db
-connectedUsersDB.db

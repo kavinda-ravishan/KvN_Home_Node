@@ -155,10 +155,7 @@
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (input.value) {
-        socket.emit("chatMessage", {
-          token: getCookieByName("session-token"),
-          msg: input.value,
-        });
+        socket.emit("chatMessage", input.value);
         input.value = "";
       }
     });
