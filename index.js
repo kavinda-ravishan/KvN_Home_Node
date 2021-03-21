@@ -30,9 +30,8 @@ const connectedUsers = {};
 const Messages = [];
 
 app.get("/users", (req, res) => {
-  res.send(connectedUsers);
+  res.send(Object.values(connectedUsers));
 });
-//
 
 io.on("connection", (socket) => {
   socket.on("init", (token) => {

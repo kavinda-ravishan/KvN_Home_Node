@@ -66,6 +66,9 @@
     #messages > li:nth-child(odd) {
       background: #efefef;
     }
+    #onlineUsers {
+      cursor: pointer;
+    }
   </style>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -87,7 +90,12 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Home</a>
+              <a class="nav-link" aria-current="page" href="/">Home Page</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" id="onlineUsers"
+                >Online Users</a
+              >
             </li>
           </ul>
           <form class="d-flex">
@@ -113,6 +121,7 @@
     const userNameDom = document.getElementById("userName");
     const inputDom = document.getElementById("input");
     const messagesDom = document.getElementById("messages");
+    const onlineUsersDom = document.getElementById("onlineUsers");
 
     const socket = io();
 
@@ -161,6 +170,16 @@
       }
     });
 
+    onlineUsersDom.addEventListener("click", async () => {
+      const res = await fetch("/users");
+      const users = await res.json();
+      let names = "";
+      for (user of users) {
+        names += `${user}\n`;
+      }
+      alert(names);
+    });
+
     socket.on("chatMessage", function (data) {
       const item = document.createElement("li");
       item.textContent = `${data.name} : ${data.msg}`;
@@ -176,9 +195,5 @@
         window.scrollTo(0, document.body.scrollHeight);
       }
     });
-
-    function onlineUsers() {
-      console.log("down");
-    }
   </script>
 </html>
