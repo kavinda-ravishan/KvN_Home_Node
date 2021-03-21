@@ -172,6 +172,7 @@
 
     onlineUsersDom.addEventListener("click", async () => {
       const res = await fetch("/users");
+
       const users = await res.json();
       let names = "";
       for (user of users) {

@@ -23,13 +23,15 @@ app.use("/login", loginRoute);
 app.use("/dashboard", cookieParser());
 app.use("/dashboard", dashboardRoute);
 
-//TESTING
+//MESSANGER
 const jwt = require("jsonwebtoken");
 const userDatabase = require("./Database/userDatabase");
+const checkAuthenticated = require("./utility/checkAuthenticated");
 const connectedUsers = {};
 const Messages = [];
 
-app.get("/users", (req, res) => {
+app.use("/users", cookieParser());
+app.get("/users", checkAuthenticated, (req, res) => {
   res.send(Object.values(connectedUsers));
 });
 
