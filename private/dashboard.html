@@ -16,6 +16,7 @@
     body {
       margin: 0;
       padding-bottom: 3rem;
+      background-color: black;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
         Helvetica, Arial, sans-serif;
     }
@@ -62,16 +63,17 @@
     }
     #messages > li {
       padding: 0.5rem 1rem;
+      color: whitesmoke;
     }
     #messages > li:nth-child(odd) {
-      background: #efefef;
+      background: rgb(25, 25, 25);
     }
     #onlineUsers {
       cursor: pointer;
     }
   </style>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="/dashboard"
           >Welcome <span id="userName"></span
