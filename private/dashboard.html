@@ -112,10 +112,9 @@
   <script>
     const userNameDom = document.getElementById("userName");
     const inputDom = document.getElementById("input");
-    const messages = document.getElementById("messages");
+    const messagesDom = document.getElementById("messages");
 
     const socket = io();
-    socket.emit("init", getCookieByName("session-token"));
 
     function getCookieByName(cookieName) {
       const cookies = document.cookie.split(";");
@@ -152,6 +151,8 @@
 
     showUserName();
 
+    socket.emit("init", getCookieByName("session-token"));
+
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       if (input.value) {
@@ -163,8 +164,21 @@
     socket.on("chatMessage", function (data) {
       const item = document.createElement("li");
       item.textContent = `${data.name} : ${data.msg}`;
-      messages.appendChild(item);
+      messagesDom.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
     });
+
+    socket.on("initChatMessages", function (messages) {
+      for (message of messages) {
+        const item = document.createElement("li");
+        item.textContent = message;
+        messagesDom.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      }
+    });
+
+    function onlineUsers() {
+      console.log("down");
+    }
   </script>
 </html>

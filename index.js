@@ -22,10 +22,17 @@ app.use("/login", loginRoute);
 
 app.use("/dashboard", cookieParser());
 app.use("/dashboard", dashboardRoute);
+
 //TESTING
 const jwt = require("jsonwebtoken");
 const userDatabase = require("./Database/userDatabase");
 const connectedUsers = {};
+const Messages = [];
+
+app.get("/users", (req, res) => {
+  res.send(connectedUsers);
+});
+//
 
 io.on("connection", (socket) => {
   socket.on("init", (token) => {
@@ -34,6 +41,7 @@ io.on("connection", (socket) => {
       userDatabase.findOne({ _id: ticket._id }, (err, user) => {
         if (err) throw new Error(err);
         connectedUsers[socket.id] = user.userName;
+        io.to(socket.id).emit("initChatMessages", Messages);
       });
     } catch (err) {
       return;
@@ -41,15 +49,22 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    delete connectedUsers[socket.id];
+    const name = connectedUsers[socket.id];
+    if (name) {
+      delete connectedUsers[socket.id];
+    }
   });
 
   socket.on("chatMessage", (msg) => {
-    console.log(connectedUsers);
-
     const name = connectedUsers[socket.id];
-    if (name) io.emit("chatMessage", { name: name, msg: msg });
-    else {
+    if (name) {
+      if (Messages.length < 20) Messages.push(`${name} : ${msg}`);
+      else {
+        Messages.shift();
+        Messages.push(`${name} : ${msg}`);
+      }
+      io.emit("chatMessage", { name: name, msg: msg });
+    } else {
       io.to(socket.id).emit("chatMessage", {
         name: "Server",
         msg: "Please refresh the page",
