@@ -22,15 +22,47 @@ app.use("/login", loginRoute);
 
 app.use("/dashboard", cookieParser());
 app.use("/dashboard", dashboardRoute);
-
+//TESTING
 const jwt = require("jsonwebtoken");
 const userDatabase = require("./Database/userDatabase");
+const connectedUsersDatabase = require("./Database/connectedUsersDatabase");
 io.on("connection", (socket) => {
-  socket.on("chatMessage", (data) => {
+  socket.on("init", (token) => {
     try {
-      const ticket = jwt.verify(data.token, process.env.TOKEN_SECRET);
+      const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
       userDatabase.findOne({ _id: ticket._id }, (err, user) => {
         if (err) throw new Error(err);
+        connectedUsersDatabase.insert({
+          userName: user.userName,
+          socketID: socket.id,
+        });
+      });
+    } catch (err) {
+      return;
+    }
+  });
+
+  socket.on("disconnect", () => {
+    try {
+      connectedUsersDatabase.remove({ socketID: socket.id }, (err, user) => {
+        if (err) throw new Error(err);
+      });
+    } catch (err) {
+      return;
+    }
+  });
+
+  socket.on("chatMessage", (data) => {
+    try {
+      connectedUsersDatabase.findOne({ socketID: socket.id }, (err, user) => {
+        if (err) throw new Error(err);
+        if (!user) {
+          io.to(socket.id).emit("chatMessage", {
+            name: "Server",
+            msg: "Please refresh the page",
+          });
+          return;
+        }
         io.emit("chatMessage", { name: user.userName, msg: data.msg });
       });
     } catch (err) {
@@ -38,7 +70,7 @@ io.on("connection", (socket) => {
     }
   });
 });
-
+//
 const PORT = process.env.PORT || 3000;
 http.listen(PORT, () => {
   console.log(`Server listening at port ${PORT}`);
