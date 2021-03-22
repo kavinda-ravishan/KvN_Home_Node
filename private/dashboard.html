@@ -195,6 +195,7 @@
     const inputDom = document.getElementById("input");
     const messagesDom = document.getElementById("messages");
     const onlineUsersDom = document.getElementById("onlineUsers");
+    const snackbarDom = document.getElementById("snackbar");
 
     const socket = io();
 
@@ -272,34 +273,28 @@
     });
 
     socket.on("userConnected", function (name) {
-      // Get the snackbar DIV
-      const toast = document.getElementById("snackbar");
-
       //add text
-      toast.textContent = `${name} is now online`;
+      snackbarDom.textContent = `${name} is now online`;
 
       // Add the "show" class to DIV
-      toast.className = "show";
+      snackbarDom.className = "show";
 
       // After 3 seconds, remove the show class from DIV
       setTimeout(function () {
-        toast.className = toast.className.replace("show", "");
+        snackbarDom.className = snackbarDom.className.replace("show", "");
       }, 3000);
     });
 
     socket.on("userDisconnected", function (name) {
-      // Get the snackbar DIV
-      const toast = document.getElementById("snackbar");
-
       //add text
-      toast.textContent = `${name} is now offline`;
+      snackbarDom.textContent = `${name} is now offline`;
 
       // Add the "show" class to DIV
-      toast.className = "show";
+      snackbarDom.className = "show";
 
       // After 3 seconds, remove the show class from DIV
       setTimeout(function () {
-        toast.className = toast.className.replace("show", "");
+        snackbarDom.className = snackbarDom.className.replace("show", "");
       }, 3000);
     });
   </script>
