@@ -6,7 +6,7 @@ const confirmPasswordDom = document.getElementById("confirmPassword");
 const resDom = document.getElementById("res");
 
 signupDom.addEventListener("click", async () => {
-  resDom.textContent = "";
+  resDom.textContent = "User data registering please wait...";
 
   const userData = {
     email: emailDom.value,

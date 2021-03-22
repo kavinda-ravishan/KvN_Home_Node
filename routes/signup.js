@@ -2,6 +2,8 @@ const router = require("express").Router();
 const Joi = require("@hapi/joi");
 const userDatabase = require("../Database/userDatabase");
 const bcrypt = require("bcryptjs");
+const mongoseDB = require("../Database/mongoDatabase");
+const User = require("../model/user");
 
 //Signin validation
 const signinValidation = (data) => {
@@ -51,10 +53,49 @@ router.post("/", async (req, res) => {
       password: hashedPassword,
     };
 
+    //Creating a new user
+    const userDataForMongoDB = new User({
+      email: reqBody.email,
+      userName: reqBody.userName,
+      password: hashedPassword,
+    });
+
     userDatabase.insert(userDataForDB);
+
+    //Check MongoDB status
+    const mongoDBStatusCode = mongoseDB.connection.readyState;
+    let mongoDBStatus = "";
+    switch (mongoDBStatusCode) {
+      case 0:
+        mongoDBStatus = "Disconnected";
+        break;
+      case 1:
+        mongoDBStatus = "Connected";
+        break;
+      case 2:
+        mongoDBStatus = "Connecting";
+        break;
+      case 3:
+        mongoDBStatus = "Disconnecting";
+        break;
+
+      default:
+        break;
+    }
+    let isMogoRegistered = "";
+    //Send user data to MongoDB
+    try {
+      await userDataForMongoDB.save();
+      isMogoRegistered = "Registered";
+    } catch (err) {
+      isMogoRegistered = "Not Registered";
+    }
+
     res
       .status(200)
-      .json({ msg: `User ${userData.userName} successfully registered.` })
+      .json({
+        msg: `User ${userData.userName} [MongoDB status : ${mongoDBStatus}, ${isMogoRegistered}] successfully registered.`,
+      })
       .end();
   });
 });
