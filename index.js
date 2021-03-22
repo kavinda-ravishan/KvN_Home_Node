@@ -12,18 +12,21 @@ const signupRoute = require("./routes/signup");
 const loginRoute = require("./routes/login");
 const dashboardRoute = require("./routes/dashboard");
 
+const mongoseDB = require("./Database/mongoDatabase");
 const userDatabase = require("./Database/userDatabase");
 //Remove all from neDB
 userDatabase.remove({}, { multi: true }, function (err, numRemoved) {});
 //Get User data form MongoDB and load to neDB
 const User = require("./model/user");
 User.find({}, function (err, users) {
-  for (user of users) {
-    userDatabase.insert({
-      email: user.email,
-      userName: user.userName,
-      password: user.password,
-    });
+  if (mongoseDB.connection.readyState === 1) {
+    for (user of users) {
+      userDatabase.insert({
+        email: user.email,
+        userName: user.userName,
+        password: user.password,
+      });
+    }
   }
 });
 
@@ -55,8 +58,10 @@ io.on("connection", (socket) => {
       const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
       userDatabase.findOne({ _id: ticket._id }, (err, user) => {
         if (err) throw new Error(err);
+        if (!user) return;
         connectedUsers[socket.id] = user.userName;
         io.to(socket.id).emit("initChatMessages", Messages);
+        socket.broadcast.emit("userConnected", user.userName);
       });
     } catch (err) {
       return;
@@ -67,6 +72,7 @@ io.on("connection", (socket) => {
     const name = connectedUsers[socket.id];
     if (name) {
       delete connectedUsers[socket.id];
+      socket.broadcast.emit("userDisconnected", name);
     }
   });
 
@@ -82,7 +88,7 @@ io.on("connection", (socket) => {
     } else {
       io.to(socket.id).emit("chatMessage", {
         name: "Server",
-        msg: "Please refresh the page",
+        msg: "Please refresh the page or Signout and Login Agin",
       });
     }
   });

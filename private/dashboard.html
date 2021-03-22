@@ -198,5 +198,13 @@
         window.scrollTo(0, document.body.scrollHeight);
       }
     });
+
+    socket.on("userConnected", function (name) {
+      alert(`${name} is now online`);
+    });
+
+    socket.on("userDisconnected", function (name) {
+      alert(`${name} is now offline`);
+    });
   </script>
 </html>
