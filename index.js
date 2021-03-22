@@ -12,6 +12,21 @@ const signupRoute = require("./routes/signup");
 const loginRoute = require("./routes/login");
 const dashboardRoute = require("./routes/dashboard");
 
+const userDatabase = require("./Database/userDatabase");
+//Remove all from neDB
+userDatabase.remove({}, { multi: true }, function (err, numRemoved) {});
+//Get User data form MongoDB and load to neDB
+const User = require("./model/user");
+User.find({}, function (err, users) {
+  for (user of users) {
+    userDatabase.insert({
+      email: user.email,
+      userName: user.userName,
+      password: user.password,
+    });
+  }
+});
+
 app.use("/", express.static("public"));
 
 app.use("/signup", express.json());
@@ -25,7 +40,6 @@ app.use("/dashboard", dashboardRoute);
 
 //MESSANGER
 const jwt = require("jsonwebtoken");
-const userDatabase = require("./Database/userDatabase");
 const checkAuthenticated = require("./utility/checkAuthenticated");
 const connectedUsers = {};
 const Messages = [];
