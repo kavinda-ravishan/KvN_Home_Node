@@ -1,3 +1,33 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   background: black;
+}
+
+main {
+  min-height: 80vh;
+  display: flex;
+}
+
+.container {
+  margin-top: 10%;
+  margin-bottom: 10%;
+}
+
+.container .btn {
+  border-radius: 50px;
+  color: white;
+}
+
+footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+  color: white;
 }
