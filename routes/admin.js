@@ -15,7 +15,7 @@ router.get("/sys", authAdmin, (req, res) => {
 
 router.get("/clc", authAdmin, (req, res) => {
   Messages.length = 0;
-  res.end();
+  res.end("Messages removed.");
 });
 
 module.exports = router;
