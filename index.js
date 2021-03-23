@@ -9,6 +9,7 @@ const io = require("./modules/modules").io;
 const signupRoute = require("./routes/signup");
 const loginRoute = require("./routes/login");
 const dashboardRoute = require("./routes/dashboard");
+const sysRoute = require("./routes/sys");
 const usersRoute = require("./routes/users");
 const startup = require("./startup/startup");
 
@@ -27,6 +28,8 @@ app.use("/dashboard", dashboardRoute);
 
 app.use("/users", cookieParser());
 app.use("/users", usersRoute);
+
+app.use("/sys", sysRoute);
 
 //MESSANGER
 const socketEvents = require("./utility/socketIO").socketEvents;
