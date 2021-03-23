@@ -1,34 +1,18 @@
-const express = require("express");
-const app = express();
-const http = require("http").Server(app);
-const io = require("socket.io")(http);
-
 const dotenv = require("dotenv");
 dotenv.config();
 
+const express = require("express");
 const cookieParser = require("cookie-parser");
-
+const app = require("./modules/modules").app;
+const http = require("./modules/modules").http;
+const io = require("./modules/modules").io;
 const signupRoute = require("./routes/signup");
 const loginRoute = require("./routes/login");
 const dashboardRoute = require("./routes/dashboard");
+const usersRoute = require("./routes/users");
+const startup = require("./startup/startup");
 
-const mongoseDB = require("./Database/mongoDatabase");
-const userDatabase = require("./Database/userDatabase");
-//Remove all from neDB
-userDatabase.remove({}, { multi: true }, function (err, numRemoved) {});
-//Get User data form MongoDB and load to neDB
-const User = require("./model/user");
-User.find({}, function (err, users) {
-  if (mongoseDB.connection.readyState === 1) {
-    for (user of users) {
-      userDatabase.insert({
-        email: user.email,
-        userName: user.userName,
-        password: user.password,
-      });
-    }
-  }
-});
+startup();
 
 app.use("/", express.static("public"));
 
@@ -41,58 +25,12 @@ app.use("/login", loginRoute);
 app.use("/dashboard", cookieParser());
 app.use("/dashboard", dashboardRoute);
 
-//MESSANGER
-const jwt = require("jsonwebtoken");
-const checkAuthenticated = require("./utility/checkAuthenticated");
-const connectedUsers = {};
-const Messages = [];
-
 app.use("/users", cookieParser());
-app.get("/users", checkAuthenticated, (req, res) => {
-  res.send(Object.values(connectedUsers));
-});
+app.use("/users", usersRoute);
 
-io.on("connection", (socket) => {
-  socket.on("init", (token) => {
-    try {
-      const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
-      userDatabase.findOne({ _id: ticket._id }, (err, user) => {
-        if (err) throw new Error(err);
-        if (!user) return;
-        connectedUsers[socket.id] = user.userName;
-        io.to(socket.id).emit("initChatMessages", Messages);
-        socket.broadcast.emit("userConnected", user.userName);
-      });
-    } catch (err) {
-      return;
-    }
-  });
-
-  socket.on("disconnect", () => {
-    const name = connectedUsers[socket.id];
-    if (name) {
-      delete connectedUsers[socket.id];
-      socket.broadcast.emit("userDisconnected", name);
-    }
-  });
-
-  socket.on("chatMessage", (msg) => {
-    const name = connectedUsers[socket.id];
-    if (name) {
-      if (Messages.length < 20) Messages.push(`${name} : ${msg}`);
-      else {
-        Messages.shift();
-        Messages.push(`${name} : ${msg}`);
-      }
-      io.emit("chatMessage", { name: name, msg: msg });
-    } else {
-      io.to(socket.id).emit("chatMessage", {
-        name: "Server",
-        msg: "Please refresh the page or Signout and Login Agin",
-      });
-    }
-  });
-});
+//MESSANGER
+const socketEvents = require("./utility/socketIO").socketEvents;
+io.on("connection", socketEvents);
 //
 
 const PORT = process.env.PORT || 3000;
