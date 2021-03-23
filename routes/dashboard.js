@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const path = require("path");
-const checkAuthenticated = require("../utility/checkAuthenticated");
+const authUser = require("../utility/checkAuthenticated").authUser;
 
-router.get("/", checkAuthenticated, (req, res) => {
+router.get("/", authUser, (req, res) => {
   res.sendFile(path.resolve("private/dashboard.html"));
 });
 

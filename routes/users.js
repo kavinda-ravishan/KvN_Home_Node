@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const checkAuthenticated = require("../utility/checkAuthenticated");
+const authUser = require("../utility/checkAuthenticated").authUser;
 const connectedUsers = require("../utility/socketIO").connectedUsers;
 
-router.get("/", checkAuthenticated, (req, res) => {
+router.get("/", authUser, (req, res) => {
   res.send(Object.values(connectedUsers));
 });
 

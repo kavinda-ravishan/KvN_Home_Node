@@ -48,3 +48,4 @@ function socketEvents(socket) {
 
 module.exports.socketEvents = socketEvents;
 module.exports.connectedUsers = connectedUsers;
+module.exports.Messages = Messages;
