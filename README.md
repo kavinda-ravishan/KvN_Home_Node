@@ -10,4 +10,5 @@
 	<li><p><a href="https://youtu.be/zWSvb5t_zH4">Web Sockets ( Socket.IO )</a></p></li>
 	<li><p><a href="https://youtu.be/VOqgoQCuJds">Simple Login page</a></p></li>
 	<li><p><a href="https://getbootstrap.com/docs/5.0/getting-started/introduction/">Bootstrap Docs</a></p></li>
+	<li><p><a href="https://socket.io/">Socket IO Docs</a></p></li>
 </ul>
