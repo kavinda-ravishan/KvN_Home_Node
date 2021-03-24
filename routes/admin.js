@@ -2,6 +2,7 @@ const router = require("express").Router();
 const os = require("os");
 const authAdmin = require("../utility/checkAuthenticated").authAdmin;
 const Messages = require("../utility/socketIO").Messages;
+const Message = require("../model/message");
 
 router.get("/sys", authAdmin, (req, res) => {
   res.end(
@@ -14,6 +15,7 @@ router.get("/sys", authAdmin, (req, res) => {
 });
 
 router.get("/clc", authAdmin, (req, res) => {
+  Message.deleteMany({}, function (err, noMessages) {});
   Messages.length = 0;
   res.end("Messages removed.");
 });
