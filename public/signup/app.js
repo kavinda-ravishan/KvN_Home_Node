@@ -6,6 +6,8 @@ const confirmPasswordDom = document.getElementById("confirmPassword");
 const resDom = document.getElementById("res");
 
 signupDom.addEventListener("click", async () => {
+  resDom.classList.remove("resSuccess");
+  resDom.classList.remove("resFailure");
   resDom.textContent = "User data registering please wait...";
 
   const userData = {
@@ -26,12 +28,10 @@ signupDom.addEventListener("click", async () => {
   const res = await fetch("/signup", options);
 
   if (res.status !== 200) {
-    resDom.classList.remove("resSuccess");
     resDom.classList.add("resFailure");
     resDom.textContent = res.headers.get("error");
   } else {
     const resJson = await res.json();
-    resDom.classList.remove("resFailure");
     resDom.classList.add("resSuccess");
     resDom.textContent = resJson.msg;
   }

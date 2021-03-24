@@ -4,6 +4,8 @@ const passwordDom = document.getElementById("password");
 const resDom = document.getElementById("res");
 
 loginDom.addEventListener("click", async () => {
+  resDom.classList.remove("resSuccess");
+  resDom.classList.remove("resFailure");
   resDom.textContent = "";
 
   const userData = {
@@ -22,12 +24,10 @@ loginDom.addEventListener("click", async () => {
   const res = await fetch("/login", options);
 
   if (res.status !== 200) {
-    resDom.classList.remove("resSuccess");
     resDom.classList.add("resFailure");
     resDom.textContent = res.headers.get("error");
   } else {
     const resJson = await res.json();
-    resDom.classList.remove("resFailure");
     resDom.classList.add("resSuccess");
     resDom.textContent = resJson.msg;
 
