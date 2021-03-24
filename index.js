@@ -34,7 +34,6 @@ app.use("/ad", adminRoute);
 
 //MESSANGER
 const socketEvents = require("./utility/socketIO").socketEvents;
-const { Messages } = require("./utility/socketIO");
 io.on("connection", socketEvents);
 //
 
