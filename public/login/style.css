@@ -75,5 +75,11 @@ body {
 .container .form .res {
   margin-top: 10px;
   font-size: small;
+  text-align: center;
+}
+.container .form .resFailure {
   color: red;
+}
+.container .form .resSuccess {
+  color: green;
 }

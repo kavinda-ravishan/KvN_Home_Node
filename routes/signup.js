@@ -94,7 +94,7 @@ router.post("/", async (req, res) => {
     res
       .status(200)
       .json({
-        msg: `User ${userData.userName} [MongoDB status : ${mongoDBStatus}, ${isMogoRegistered}] successfully registered.`,
+        msg: `User ${userData.userName} [MongoDB status : ${mongoDBStatus}, ${isMogoRegistered}] successfully registered. Navigate to login page for login`,
       })
       .end();
   });
