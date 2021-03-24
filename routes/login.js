@@ -7,7 +7,7 @@ router.post("/", async (req, res) => {
   //Get Data from req Boy
   const reqBody = req.body;
   const userData = {
-    email: reqBody.email,
+    email: reqBody.email.toLocaleLowerCase(),
     password: reqBody.password,
   };
 

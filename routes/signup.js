@@ -28,7 +28,7 @@ router.post("/", async (req, res) => {
   //Get Data from req Boy
   const reqBody = req.body;
   const userData = {
-    email: reqBody.email,
+    email: reqBody.email.toLowerCase(),
     userName: reqBody.userName,
     password: reqBody.password,
   };
@@ -48,17 +48,13 @@ router.post("/", async (req, res) => {
     const hashedPassword = await bcrypt.hash(userData.password, salt);
 
     const userDataForDB = {
-      email: reqBody.email,
-      userName: reqBody.userName,
+      email: userData.email,
+      userName: userData.userName,
       password: hashedPassword,
     };
 
     //Creating a new user
-    const userDataForMongoDB = new User({
-      email: reqBody.email,
-      userName: reqBody.userName,
-      password: hashedPassword,
-    });
+    const userDataForMongoDB = new User(userDataForDB);
 
     userDatabase.insert(userDataForDB);
 
