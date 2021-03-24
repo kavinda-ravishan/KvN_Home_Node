@@ -256,9 +256,9 @@
       alert(names);
     });
 
-    socket.on("chatMessage", function (data) {
+    socket.on("chatMessage", function (message) {
       const item = document.createElement("li");
-      item.textContent = `${data.name} : ${data.msg}`;
+      item.textContent = `${message.name} : ${message.msg}`;
       messagesDom.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
     });
@@ -266,7 +266,7 @@
     socket.on("initChatMessages", function (messages) {
       for (message of messages) {
         const item = document.createElement("li");
-        item.textContent = message;
+        item.textContent = `${message.name} : ${message.msg}`;
         messagesDom.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
       }

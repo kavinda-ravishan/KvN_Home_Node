@@ -31,10 +31,10 @@ function socketEvents(socket) {
   socket.on("chatMessage", (msg) => {
     const name = connectedUsers[socket.id];
     if (name) {
-      if (Messages.length < 20) Messages.push(`${name} : ${msg}`);
+      if (Messages.length < 20) Messages.push({ name: name, msg: msg });
       else {
         Messages.shift();
-        Messages.push(`${name} : ${msg}`);
+        Messages.push({ name: name, msg: msg });
       }
       io.emit("chatMessage", { name: name, msg: msg });
     } else {
