@@ -76,6 +76,7 @@ body {
   margin-top: 10px;
   font-size: small;
   text-align: center;
+  color: yellow;
 }
 .container .form .resFailure {
   color: red;
