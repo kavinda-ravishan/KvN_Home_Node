@@ -4,7 +4,7 @@ const authAdmin = require("../utility/checkAuthenticated").authAdmin;
 const Messages = require("../utility/socketIO").Messages;
 const Message = require("../model/message");
 
-router.get("/sys", authAdmin, (req, res) => {
+router.get("/sys", authAdmin, (_req, res) => {
   res.end(
     `CPUs : ${os.cpus()[0].model}, Freemem : ${
       os.freemem / 1000000000
@@ -14,8 +14,8 @@ router.get("/sys", authAdmin, (req, res) => {
   );
 });
 
-router.get("/clc", authAdmin, (req, res) => {
-  Message.deleteMany({}, function (err, noMessages) {});
+router.get("/clc", authAdmin, (_req, res) => {
+  Message.deleteMany({}, function (_err, _noMessages) {});
   Messages.length = 0;
   res.end("Messages removed.");
 });

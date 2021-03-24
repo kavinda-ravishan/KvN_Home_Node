@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
     return res.status(400).header("error", error.details[0].message).end();
   }
 
-  userDatabase.findOne({ email: userData.email }, async function (err, user) {
+  userDatabase.findOne({ email: userData.email }, async function (_err, user) {
     if (user) {
       return res.status(400).header("error", "Email already Exists!").end();
     }
@@ -78,14 +78,14 @@ router.post("/", async (req, res) => {
       default:
         break;
     }
-    let isMogoRegistered = "";
+    let isMogoRegistered = "Not Registered";
     //Send user data to MongoDB
     try {
-      await userDataForMongoDB.save();
-      isMogoRegistered = "Registered";
-    } catch (err) {
-      isMogoRegistered = "Not Registered";
-    }
+      if (mongoDBStatusCode === 1) {
+        await userDataForMongoDB.save();
+        isMogoRegistered = "Registered";
+      }
+    } catch (err) {}
 
     res
       .status(200)
