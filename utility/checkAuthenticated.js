@@ -1,23 +1,29 @@
 const jwt = require("jsonwebtoken");
 const userDatabase = require("../Database/userDatabase");
 
+function clearCookiesAndRedirect(res, redirectDes) {
+  res
+    .clearCookie("user-name")
+    .clearCookie("session-token")
+    .redirect(redirectDes);
+}
+
+function getSessionTime(iat) {
+  return Math.round(Date.now() / 1000) - iat;
+}
+
 function authUser(req, res, next) {
   try {
     const token = req.cookies["session-token"];
     const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
 
-    //Calculate session time
-    const sessionTime = Math.round(Date.now() / 1000) - ticket.iat;
-    if (sessionTime > 3600) {
+    if (getSessionTime(ticket.iat) > 3600) {
       throw new Error("Session time expired");
     }
-    //
+
     next();
   } catch (err) {
-    res
-      .clearCookie("user-name")
-      .clearCookie("session-token")
-      .redirect("/login");
+    clearCookiesAndRedirect(res, "/login");
   }
 }
 
@@ -27,33 +33,19 @@ function authAdmin(req, res, next) {
     const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
 
     userDatabase.findOne({ _id: ticket._id }, (err, user) => {
-      if (!user) {
-        return res
-          .clearCookie("user-name")
-          .clearCookie("session-token")
-          .redirect("/login");
+      if (user?.email !== "admin") {
+        clearCookiesAndRedirect(res, "/login");
+        return;
       }
-      if (user.userName !== "admin") {
-        return res
-          .clearCookie("user-name")
-          .clearCookie("session-token")
-          .redirect("/login");
-      }
-      //Calculate session time
-      const sessionTime = Math.round(Date.now() / 1000) - ticket.iat;
-      if (sessionTime > 3600) {
-        return res
-          .clearCookie("user-name")
-          .clearCookie("session-token")
-          .redirect("/login");
+
+      if (getSessionTime(ticket.iat) > 3600) {
+        clearCookiesAndRedirect(res, "/login");
+        return;
       }
       next();
     });
   } catch (err) {
-    res
-      .clearCookie("user-name")
-      .clearCookie("session-token")
-      .redirect("/login");
+    clearCookiesAndRedirect(res, "/login");
   }
 }
 
