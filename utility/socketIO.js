@@ -44,11 +44,19 @@ function socketEvents(socket) {
   socket.on("chatMessage", async (msg) => {
     const message = { name: connectedUsers[socket.id], msg: msg };
 
-    const msgDataForMongoDB = new Message(message);
-    msgDataForMongoDB.save();
-
     if (message.name) {
-      Messages.push(message);
+      if (Messages.length < 20) {
+        const msgDataForMongoDB = new Message(message);
+        msgDataForMongoDB.save();
+        Messages.push(message);
+      } else {
+        const msgDataForMongoDB = new Message(message);
+        msgDataForMongoDB.save();
+        Messages.push(message);
+
+        Message.deleteOne({}, function (err, noMessages) {});
+        Messages.shift();
+      }
       io.emit("chatMessage", message);
     } else {
       io.to(socket.id).emit("chatMessage", {
