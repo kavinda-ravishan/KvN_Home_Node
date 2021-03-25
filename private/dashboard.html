@@ -71,7 +71,23 @@
     #onlineUsers {
       cursor: pointer;
     }
+    #scrollToBottom {
+      position: fixed;
+      bottom: 4rem;
+      right: 20px;
+      opacity: 0.3;
+    }
+    #scrollToTop {
+      position: fixed;
+      bottom: 6rem;
+      right: 20px;
+      opacity: 0.3;
+    }
 
+    #scrollToTop:hover,
+    #scrollToBottom:hover {
+      opacity: 1;
+    }
     /* The snackbar - position it at the bottom and in the middle of the screen */
     #snackbar {
       visibility: hidden; /* Hidden by default. Visible on click */
@@ -179,6 +195,17 @@
       </div>
     </nav>
     <ul id="messages"></ul>
+    <button
+      type="button"
+      class="btn btn-sm btn-secondary"
+      id="scrollToTop"
+      onclick="scrollToTop()"
+    ></button>
+    <button
+      class="btn btn-sm btn-secondary"
+      id="scrollToBottom"
+      onclick="scrollToBottom()"
+    ></button>
     <form id="form" action="">
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
@@ -232,6 +259,14 @@
       userNameDom.textContent = firstName;
     }
 
+    function scrollToTop() {
+      window.scrollTo({ top: 0 });
+    }
+
+    function scrollToBottom() {
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+
     showUserName();
 
     socket.emit("init", getCookieByName("session-token"));
@@ -260,7 +295,6 @@
       const item = document.createElement("li");
       item.textContent = `${message.name} : ${message.msg}`;
       messagesDom.appendChild(item);
-      window.scrollTo(0, document.body.scrollHeight);
     });
 
     socket.on("initChatMessages", function (messages) {
