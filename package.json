@@ -1,5 +1,5 @@
 {
-  "name": "kvn_home_node",
+  "name": "Web_Chat_App",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kavinda-ravishan/KvN_Home_Node.git"
+    "url": "git+https://github.com/kavinda-ravishan/Web_Chat_App.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kavinda-ravishan/KvN_Home_Node/issues"
+    "url": "https://github.com/kavinda-ravishan/Web_Chat_App/issues"
   },
-  "homepage": "https://github.com/kavinda-ravishan/KvN_Home_Node#readme",
+  "homepage": "https://github.com/kavinda-ravishan/Web_Chat_App#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
     "dotenv": "^8.2.0",
