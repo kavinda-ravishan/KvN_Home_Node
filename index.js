@@ -11,9 +11,6 @@ const loginRoute = require("./routes/login");
 const dashboardRoute = require("./routes/dashboard");
 const adminRoute = require("./routes/admin");
 const usersRoute = require("./routes/users");
-const startup = require("./startup/startup");
-
-startup();
 
 app.use("/", express.static("public"));
 

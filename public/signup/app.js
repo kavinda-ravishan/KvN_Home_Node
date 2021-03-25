@@ -34,5 +34,8 @@ signupDom.addEventListener("click", async () => {
     const resJson = await res.json();
     resDom.classList.add("resSuccess");
     resDom.textContent = resJson.msg;
+
+    const resNext = await fetch("/login");
+    window.location.replace(resNext.url);
   }
 });

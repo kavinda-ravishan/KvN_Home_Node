@@ -2,7 +2,7 @@ const router = require("express").Router();
 const Joi = require("@hapi/joi");
 const userDatabase = require("../Database/userDatabase");
 const bcrypt = require("bcryptjs");
-const mongoseDB = require("../Database/mongoDatabase");
+const mongoose = require("../Database/mongoDatabase");
 const User = require("../model/user");
 
 //Signin validation
@@ -58,39 +58,15 @@ router.post("/", async (req, res) => {
 
     userDatabase.insert(userDataForDB);
 
-    //Check MongoDB status
-    const mongoDBStatusCode = mongoseDB.connection.readyState;
-    let mongoDBStatus = "";
-    switch (mongoDBStatusCode) {
-      case 0:
-        mongoDBStatus = "Disconnected";
-        break;
-      case 1:
-        mongoDBStatus = "Connected";
-        break;
-      case 2:
-        mongoDBStatus = "Connecting";
-        break;
-      case 3:
-        mongoDBStatus = "Disconnecting";
-        break;
-
-      default:
-        break;
-    }
-    let isMogoRegistered = "Not Registered";
     //Send user data to MongoDB
     try {
-      if (mongoDBStatusCode === 1) {
-        await userDataForMongoDB.save();
-        isMogoRegistered = "Registered";
-      }
+      if (mongoose.connection.readyState === 1) await userDataForMongoDB.save();
     } catch (err) {}
 
     res
       .status(200)
       .json({
-        msg: `User ${userData.userName} [MongoDB status : ${mongoDBStatus}, ${isMogoRegistered}] successfully registered. Navigate to login page for login`,
+        msg: `User ${userData.userName} successfully registered.`,
       })
       .end();
   });
