@@ -33,7 +33,12 @@ function authAdmin(req, res, next) {
     const ticket = jwt.verify(token, process.env.TOKEN_SECRET);
 
     userDatabase.findOne({ _id: ticket._id }, (err, user) => {
-      if (user?.email !== "admin") {
+	  if (!user) {
+        clearCookiesAndRedirect(res, "/login");
+        return;
+      }
+		
+      if (user.email !== "admin") {
         clearCookiesAndRedirect(res, "/login");
         return;
       }
