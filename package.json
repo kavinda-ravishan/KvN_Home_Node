@@ -18,14 +18,14 @@
   },
   "homepage": "https://github.com/kavinda-ravishan/Web_Chat_App#readme",
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "nedb": "^1.8.0",
-    "bcryptjs": "^2.4.3",
+    "joi": "^17.4.0",
     "jsonwebtoken": "^8.5.1",
-    "cookie-parser": "^1.4.5",
-    "socket.io": "^3.1.2",
-    "mongoose": "^5.11.18"
+    "mongoose": "^5.11.18",
+    "nedb": "^1.8.0",
+    "socket.io": "^3.1.2"
   }
 }

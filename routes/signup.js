@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const Joi = require("@hapi/joi");
+const Joi = require("joi");
 const userDatabase = require("../Database/userDatabase");
 const bcrypt = require("bcryptjs");
 
