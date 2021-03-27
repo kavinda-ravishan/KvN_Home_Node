@@ -2,8 +2,6 @@ const router = require("express").Router();
 const Joi = require("@hapi/joi");
 const userDatabase = require("../Database/userDatabase");
 const bcrypt = require("bcryptjs");
-const mongoose = require("../Database/mongoDatabase");
-const User = require("../model/user");
 
 //Signin validation
 const signinValidation = (data) => {
@@ -53,15 +51,7 @@ router.post("/", async (req, res) => {
       password: hashedPassword,
     };
 
-    //Creating a new user
-    const userDataForMongoDB = new User(userDataForDB);
-
     userDatabase.insert(userDataForDB);
-
-    //Send user data to MongoDB
-    try {
-      if (mongoose.connection.readyState === 1) await userDataForMongoDB.save();
-    } catch (err) {}
 
     res
       .status(200)

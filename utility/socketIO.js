@@ -1,8 +1,6 @@
 const userDatabase = require("../Database/userDatabase");
-const mongoose = require("../Database/mongoDatabase");
 const io = require("../modules/modules").io;
 const jwt = require("jsonwebtoken");
-const Message = require("../model/message");
 const connectedUsers = {};
 const Messages = [];
 
@@ -46,23 +44,10 @@ function socketEvents(socket) {
     const message = { name: connectedUsers[socket.id], msg: msg };
 
     if (message.name) {
-      const msgDataForMongoDB = new Message(message);
-
-      if (Messages.length < 20) {
-        try {
-          if (mongoose.connection.readyState === 1)
-            await msgDataForMongoDB.save();
-        } catch (err) {}
-        Messages.push(message);
-      } else {
-        try {
-          if (mongoose.connection.readyState === 1)
-            await msgDataForMongoDB.save();
-        } catch (err) {}
-        Messages.push(message);
-
-        Message.deleteOne({}, function (_err, _noMessages) {});
+      if (Messages.length < 20) Messages.push(message);
+      else {
         Messages.shift();
+        Messages.push(message);
       }
       io.emit("chatMessage", message);
     } else {
