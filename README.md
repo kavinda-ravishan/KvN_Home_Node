@@ -2,6 +2,7 @@
 
 <h2>application powered by NodeJS with Socket.IO</h2>
 <p><a href="https://chat-application-nodejs-io.herokuapp.com/">Try Chat app Now</a></p>
+<p><a href="https://hub.docker.com/r/slspider/chatapp">Docker image</a></p>
 <h3>Learning materials and tutorials</h3>
 <ul>
 	<li><p><a href="https://youtu.be/2jqok-WgelI">Json Web Token and MongoDB (Dev Ed)</a></p></li>
